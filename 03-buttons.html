@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FutureStack — Buttons</title>
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+  /* Page-local override: pull primary CTA toward purple, pull display gradient away from pink. */
+  :root {
+    --fs-grad-primary: linear-gradient(135deg, #A033FF 0%, #5B1FE0 100%);
+    --fs-grad-text:    linear-gradient(135deg, #00D4FF 0%, #7B2FFF 100%);
+    --fs-glow-magenta: 0 0 24px rgba(123, 47, 255, 0.5);
+  }
+  .fs-btn-primary { background: var(--fs-grad-primary); box-shadow: var(--fs-glow-magenta); }
+  .fs-btn-primary:hover { box-shadow: 0 0 32px rgba(123, 47, 255, 0.65); }
+
+  body.fs-scope { padding: 48px 64px 80px; }
+  .page { max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 56px; }
+  header .title { font-size: 3rem; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 8px; }
+  header .sub { color: var(--fs-text-muted); font-size: 1.125rem; max-width: 640px; margin: 0; }
+  section { display: flex; flex-direction: column; gap: 20px; }
+  h2.section-label { font-family: var(--fs-font-mono); font-size: 0.75rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--fs-cyan); margin: 0 0 4px; }
+  h3.section-title { font-size: 2rem; font-weight: 700; letter-spacing: -0.01em; margin: 0; }
+  .section-desc { color: var(--fs-text-muted); max-width: 640px; margin: -8px 0 8px; }
+  .panel { background: var(--fs-surface); border: 1px solid var(--fs-border); border-radius: 12px; padding: 32px; display: flex; flex-direction: column; gap: 24px; }
+  .row { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .row-label { font-family: var(--fs-font-mono); font-size: 0.6875rem; color: var(--fs-text-subtle); text-transform: uppercase; letter-spacing: 0.08em; min-width: 120px; }
+  .group-title { font-family: var(--fs-font-mono); font-size: 0.75rem; color: var(--fs-cyan); text-transform: uppercase; letter-spacing: 0.08em; margin: 0; }
+  .divider { height: 1px; background: var(--fs-border); }
+  .usage { background: var(--fs-bg-sec); border: 1px solid var(--fs-border); border-radius: 12px; padding: 24px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .rule { display: flex; flex-direction: column; gap: 6px; }
+  .rule h4 { margin: 0; font-size: 0.875rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .rule .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .rule p { margin: 0; font-size: 0.8125rem; color: var(--fs-text-muted); line-height: 1.5; }
+  /* faux loading state */
+  .btn-loading { position: relative; color: transparent !important; }
+  .btn-loading::after {
+    content: ''; position: absolute; width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff;
+    border-radius: 50%; animation: fs-spin-slow 0.8s linear infinite;
+  }
+  .btn-loading.fs-btn-secondary::after { border-color: rgba(255,255,255,0.2); border-top-color: var(--fs-cyan); }
+  .btn-disabled { opacity: 0.4; cursor: not-allowed; filter: saturate(0.6); }
+  .icon { width: 16px; height: 16px; }
+  svg.icon { stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+</style>
+</head>
+<body class="fs-scope fs-bg-mesh">
+<div class="page">
+
+  <header>
+    <p class="fs-eyebrow">// 03 &nbsp;Buttons</p>
+    <h1 class="title">One Primary. <span class="fs-text-gradient">Always.</span></h1>
+    <p class="sub">Four variants, three sizes, four states. A FutureStack surface has exactly one magenta button — the single most important action. Every other action demotes.</p>
+  </header>
+
+  <!-- VARIANTS -->
+  <section>
+    <div>
+      <h2 class="section-label">Variants</h2>
+      <h3 class="section-title">Four flavors, clear hierarchy</h3>
+      <p class="section-desc">Primary calls attention. Secondary confirms a choice. Ghost fades into nav. Accent is the rare cyan alternate for dark glass surfaces.</p>
+    </div>
+    <div class="panel">
+      <div class="row">
+        <span class="row-label">Primary · CTA</span>
+        <a class="fs-btn fs-btn-primary">Start Free</a>
+        <a class="fs-btn fs-btn-primary">Start Free <svg class="icon" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+        <a class="fs-btn fs-btn-primary"><svg class="icon" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+      </div>
+      <div class="divider"></div>
+      <div class="row">
+        <span class="row-label">Secondary</span>
+        <a class="fs-btn fs-btn-secondary">Schedule a Demo</a>
+        <a class="fs-btn fs-btn-secondary"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Schedule a Demo</a>
+        <a class="fs-btn fs-btn-secondary">View Docs <svg class="icon" viewBox="0 0 24 24"><path d="M7 17L17 7M7 7h10v10"/></svg></a>
+      </div>
+      <div class="divider"></div>
+      <div class="row">
+        <span class="row-label">Ghost</span>
+        <a class="fs-btn fs-btn-ghost">Pricing</a>
+        <a class="fs-btn fs-btn-ghost">Integrations</a>
+        <a class="fs-btn fs-btn-ghost">Docs</a>
+        <a class="fs-btn fs-btn-ghost">Log In</a>
+      </div>
+      <div class="divider"></div>
+      <div class="row">
+        <span class="row-label">Accent · Cyan</span>
+        <a class="fs-btn fs-btn-accent">Connect Lovable</a>
+        <a class="fs-btn fs-btn-accent"><svg class="icon" viewBox="0 0 24 24" style="stroke:#0D1B2A"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>Connect Lovable</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SIZES -->
+  <section>
+    <div>
+      <h2 class="section-label">Sizes</h2>
+      <h3 class="section-title">Three sizes, one type family</h3>
+      <p class="section-desc">Large for heroes, default for everywhere else, small for toolbars and dense UI. Inside components (cards), default is always correct.</p>
+    </div>
+    <div class="panel">
+      <div class="row">
+        <span class="row-label">Large · Hero</span>
+        <a class="fs-btn fs-btn-primary fs-btn-lg">Start Free <svg class="icon" style="width:18px;height:18px" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+        <a class="fs-btn fs-btn-secondary fs-btn-lg">Schedule a Demo</a>
+      </div>
+      <div class="divider"></div>
+      <div class="row">
+        <span class="row-label">Default</span>
+        <a class="fs-btn fs-btn-primary">Start Free</a>
+        <a class="fs-btn fs-btn-secondary">Schedule a Demo</a>
+        <a class="fs-btn fs-btn-ghost">Pricing</a>
+      </div>
+      <div class="divider"></div>
+      <div class="row">
+        <span class="row-label">Small · Dense</span>
+        <a class="fs-btn fs-btn-primary fs-btn-sm">Publish</a>
+        <a class="fs-btn fs-btn-secondary fs-btn-sm">Save Draft</a>
+        <a class="fs-btn fs-btn-ghost fs-btn-sm">Cancel</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATES -->
+  <section>
+    <div>
+      <h2 class="section-label">States</h2>
+      <h3 class="section-title">Rest · Hover · Loading · Disabled</h3>
+      <p class="section-desc">Hover lifts 1px and brightens the glow. Loading replaces the label with a spinner — the button keeps its width. Disabled drops saturation and opacity; never use disabled as a "coming soon" signal.</p>
+    </div>
+    <div class="panel">
+      <div class="row">
+        <span class="row-label">Primary</span>
+        <a class="fs-btn fs-btn-primary">Rest</a>
+        <a class="fs-btn fs-btn-primary" style="transform: translateY(-1px); box-shadow: 0 0 32px rgba(233,30,140,0.6)">Hover</a>
+        <a class="fs-btn fs-btn-primary btn-loading">Loading…</a>
+        <a class="fs-btn fs-btn-primary btn-disabled">Disabled</a>
+      </div>
+      <div class="divider"></div>
+      <div class="row">
+        <span class="row-label">Secondary</span>
+        <a class="fs-btn fs-btn-secondary">Rest</a>
+        <a class="fs-btn fs-btn-secondary" style="border-color: var(--fs-cyan); color: var(--fs-cyan); transform: translateY(-1px)">Hover</a>
+        <a class="fs-btn fs-btn-secondary btn-loading">Loading</a>
+        <a class="fs-btn fs-btn-secondary btn-disabled">Disabled</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- USAGE -->
+  <section>
+    <div>
+      <h2 class="section-label">Usage rules</h2>
+      <h3 class="section-title">Three non-negotiables</h3>
+    </div>
+    <div class="usage">
+      <div class="rule">
+        <h4><span class="dot" style="background: var(--fs-teal)"></span>One primary per view</h4>
+        <p>The magenta button appears exactly once on any given surface. Secondary actions demote to outline or ghost.</p>
+      </div>
+      <div class="rule">
+        <h4><span class="dot" style="background: var(--fs-teal)"></span>Imperative, specific labels</h4>
+        <p>"Start Free", "Connect Lovable", "Schedule a Demo." Never "Click here", "Submit", or "Learn more".</p>
+      </div>
+      <div class="rule">
+        <h4><span class="dot" style="background: var(--fs-coral)"></span>Never stack two primaries</h4>
+        <p>If you need two equally-weighted CTAs, one is wrong. Find the real primary; make the other secondary.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

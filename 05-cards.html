@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FutureStack — Cards</title>
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+  body.fs-scope { padding: 48px 64px 80px; }
+  .page { max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 56px; }
+  header .title { font-size: 3rem; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 8px; }
+  header .sub { color: var(--fs-text-muted); font-size: 1.125rem; max-width: 680px; margin: 0; }
+  section { display: flex; flex-direction: column; gap: 20px; }
+  h2.section-label { font-family: var(--fs-font-mono); font-size: 0.75rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--fs-cyan); margin: 0 0 4px; }
+  h3.section-title { font-size: 2rem; font-weight: 700; letter-spacing: -0.01em; margin: 0; }
+  .section-desc { color: var(--fs-text-muted); max-width: 640px; margin: -8px 0 8px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+
+  svg.icon { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* Feature card */
+  .feature-card {
+    background: var(--fs-surface); border: 1px solid var(--fs-border);
+    border-radius: 12px; padding: 28px; display: flex; flex-direction: column; gap: 16px;
+    transition: border-color 250ms, transform 250ms;
+  }
+  .feature-card:hover { border-color: var(--fs-border-2); transform: translateY(-2px); }
+  .feature-icon {
+    width: 48px; height: 48px; border-radius: 8px;
+    display: grid; place-items: center;
+    background: rgba(0,212,255,0.1); color: var(--fs-cyan);
+    border: 1px solid rgba(0,212,255,0.2);
+  }
+  .feature-icon.magenta { background: rgba(233,30,140,0.1); color: var(--fs-magenta); border-color: rgba(233,30,140,0.25); }
+  .feature-icon.purple  { background: rgba(123,47,255,0.12); color: var(--fs-violet); border-color: rgba(123,47,255,0.25); }
+  .feature-card h4 { margin: 0; font-size: 1.25rem; font-weight: 600; letter-spacing: -0.01em; }
+  .feature-card p { margin: 0; color: var(--fs-text-muted); font-size: 0.9375rem; line-height: 1.6; }
+
+  /* Stat card */
+  .stat-card {
+    background: var(--fs-surface); border: 1px solid var(--fs-border);
+    border-radius: 12px; padding: 28px; display: flex; flex-direction: column; gap: 8px;
+  }
+  .stat-card .value {
+    font-family: var(--fs-font-mono); font-weight: 700;
+    font-size: 3rem; line-height: 1; letter-spacing: -0.03em;
+  }
+  .stat-card .value.grad {
+    background: var(--fs-grad-text); -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .stat-card .label {
+    font-family: var(--fs-font-mono); font-size: 0.75rem;
+    color: var(--fs-text-muted); text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .stat-card .delta { font-size: 0.8125rem; color: var(--fs-success); display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; }
+
+  /* Pricing card */
+  .pricing-card {
+    background: var(--fs-surface); border: 1px solid var(--fs-border);
+    border-radius: 16px; padding: 32px; display: flex; flex-direction: column; gap: 20px;
+    position: relative;
+  }
+  .pricing-card.popular {
+    border-color: transparent;
+    background:
+      linear-gradient(var(--fs-surface), var(--fs-surface)) padding-box,
+      var(--fs-grad-primary) border-box;
+    border: 1.5px solid transparent;
+    box-shadow: 0 0 32px rgba(233,30,140,0.18);
+  }
+  .pricing-card .tier { font-family: var(--fs-font-mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--fs-cyan); }
+  .pricing-card .price { display: flex; align-items: baseline; gap: 4px; }
+  .pricing-card .price .dollars { font-size: 3rem; font-weight: 700; letter-spacing: -0.03em; }
+  .pricing-card .price .per { color: var(--fs-text-muted); font-size: 0.875rem; }
+  .pricing-card ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 0.9375rem; color: var(--fs-text-muted); }
+  .pricing-card ul li { display: flex; align-items: flex-start; gap: 10px; }
+  .pricing-card ul svg { flex-shrink: 0; color: var(--fs-cyan); width: 18px; height: 18px; stroke-width: 2.5; margin-top: 1px; }
+  .pricing-card .popular-ribbon {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--fs-grad-primary); color: #fff;
+    font-family: var(--fs-font-mono); font-size: 0.6875rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    padding: 6px 14px; border-radius: 9999px; box-shadow: var(--fs-glow-magenta);
+  }
+
+  /* Glass card */
+  .glass-demo {
+    background-image: url('assets/hero-image.png');
+    background-size: cover; background-position: center;
+    border-radius: 16px; padding: 48px; min-height: 320px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .glass-demo::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(13,27,42,0.3), rgba(13,27,42,0.7));
+  }
+  .glass-card {
+    position: relative; z-index: 1; max-width: 420px;
+    background: rgba(26, 31, 46, 0.7);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px; padding: 24px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .glass-card h4 { margin: 0; font-size: 1.25rem; font-weight: 600; }
+  .glass-card p { margin: 0; color: var(--fs-text-muted); font-size: 0.875rem; line-height: 1.5; }
+
+  /* Quote card */
+  .quote-card {
+    background: var(--fs-surface); border: 1px solid var(--fs-border);
+    border-radius: 16px; padding: 32px; display: flex; flex-direction: column; gap: 24px;
+    position: relative;
+  }
+  .quote-card .mark {
+    position: absolute; top: 20px; right: 28px;
+    font-family: 'Georgia', serif; font-size: 4rem; line-height: 1;
+    color: var(--fs-magenta); opacity: 0.4;
+  }
+  .quote-card blockquote {
+    margin: 0; font-size: 1.125rem; line-height: 1.6; font-weight: 500;
+  }
+  .quote-card .author { display: flex; align-items: center; gap: 12px; }
+  .quote-card .avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--fs-grad-cool);
+    display: grid; place-items: center; font-weight: 600; color: #0D1B2A;
+  }
+  .quote-card .author-meta .name { font-weight: 600; font-size: 0.875rem; }
+  .quote-card .author-meta .role { font-size: 0.75rem; color: var(--fs-text-subtle); }
+
+  /* Integration card */
+  .integration-card {
+    background: var(--fs-surface); border: 1px solid var(--fs-border);
+    border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 16px;
+  }
+  .integration-head { display: flex; align-items: center; justify-content: space-between; }
+  .integration-logo {
+    width: 48px; height: 48px; border-radius: 8px;
+    display: grid; place-items: center;
+    background: var(--fs-bg-sec); border: 1px solid var(--fs-border);
+    font-family: var(--fs-font-mono); font-weight: 700; font-size: 0.875rem;
+  }
+  .integration-card h4 { margin: 0; font-size: 1rem; font-weight: 600; }
+  .integration-card p { margin: 0; font-size: 0.8125rem; color: var(--fs-text-muted); line-height: 1.5; }
+
+  /* CTA card */
+  .cta-card {
+    background: var(--fs-grad-primary); border-radius: 16px; padding: 40px;
+    display: grid; grid-template-columns: 2fr 1fr; gap: 24px; align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .cta-card::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 90% 50%, rgba(255,255,255,0.15), transparent 40%),
+      linear-gradient(60deg, transparent, rgba(0,212,255,0.2));
+  }
+  .cta-card > * { position: relative; z-index: 1; }
+  .cta-card h3 { margin: 0 0 8px; font-size: 1.75rem; font-weight: 700; letter-spacing: -0.01em; color: #fff; }
+  .cta-card p { margin: 0; color: rgba(255,255,255,0.85); font-size: 1rem; }
+  .cta-card .cta-action { display: flex; justify-content: flex-end; }
+  .cta-white {
+    background: #fff; color: var(--fs-magenta); font-weight: 600;
+    padding: 14px 24px; border-radius: 8px; font-size: 0.9375rem;
+    display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+  }
+</style>
+</head>
+<body class="fs-scope fs-bg-mesh">
+<div class="page">
+
+  <header>
+    <p class="fs-eyebrow">// 05 &nbsp;Cards</p>
+    <h1 class="title">Six Patterns. <span class="fs-text-gradient">Everything Else Is a Remix.</span></h1>
+    <p class="sub">One idea per card. When a card holds two features, two stats, or two CTAs, split it. The patterns below cover 95% of real surfaces.</p>
+  </header>
+
+  <!-- FEATURE -->
+  <section>
+    <div>
+      <h2 class="section-label">Feature card</h2>
+      <h3 class="section-title">Icon · Title · Body</h3>
+      <p class="section-desc">The workhorse. Used in "what you get" grids, docs landing, dashboards.</p>
+    </div>
+    <div class="grid-3">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+        </div>
+        <h4>Structured content</h4>
+        <p>Define your schema once. Every channel — web, email, AI — reads the same source of truth.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon magenta">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <h4>Instant webhooks</h4>
+        <p>Edits propagate to Lovable, Webflow, v0, and your preview in under a second.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon purple">
+          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33h0a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82v0a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        </div>
+        <h4>AI native schema</h4>
+        <p>Describe the content you want in plain English. FutureStack builds the model, types, and editor UI.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section>
+    <div>
+      <h2 class="section-label">Stat card</h2>
+      <h3 class="section-title">Numbers are first-class</h3>
+      <p class="section-desc">Big number, short mono label, optional delta. Use the gradient variant for the hero stat only.</p>
+    </div>
+    <div class="grid-4">
+      <div class="stat-card">
+        <div class="value grad">$0.24</div>
+        <div class="label">Cost per 1k requests</div>
+        <div class="delta">▼ 62% vs. Contentful</div>
+      </div>
+      <div class="stat-card">
+        <div class="value">10×</div>
+        <div class="label">Faster publish cycle</div>
+        <div class="delta">▲ vs. traditional CMS</div>
+      </div>
+      <div class="stat-card">
+        <div class="value">500+</div>
+        <div class="label">Native integrations</div>
+      </div>
+      <div class="stat-card">
+        <div class="value">99.99%</div>
+        <div class="label">Uptime SLA</div>
+        <div class="delta">30-day rolling</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section>
+    <div>
+      <h2 class="section-label">Pricing card</h2>
+      <h3 class="section-title">Gradient border = "Most Popular"</h3>
+      <p class="section-desc">Everything else is a plain surface. The border is the ribbon.</p>
+    </div>
+    <div class="grid-4">
+      <div class="pricing-card">
+        <div class="tier">Free</div>
+        <div class="price"><span class="dollars">$0</span><span class="per">/mo</span></div>
+        <p class="fs-small" style="margin:0">Perfect to kick the tires.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>1 project</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>1k API calls / mo</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>Community support</li>
+        </ul>
+        <a class="fs-btn fs-btn-secondary" style="margin-top:auto">Start Free</a>
+      </div>
+      <div class="pricing-card">
+        <div class="tier">Starter</div>
+        <div class="price"><span class="dollars">$29</span><span class="per">/mo</span></div>
+        <p class="fs-small" style="margin:0">For solo builders shipping.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>5 projects</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>50k API calls</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>Lovable + Webflow</li>
+        </ul>
+        <a class="fs-btn fs-btn-secondary" style="margin-top:auto">Choose Starter</a>
+      </div>
+      <div class="pricing-card popular">
+        <span class="popular-ribbon">Most Popular</span>
+        <div class="tier">Pro</div>
+        <div class="price"><span class="dollars">$79</span><span class="per">/mo</span></div>
+        <p class="fs-small" style="margin:0">Teams shipping weekly.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>Unlimited projects</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>500k API calls</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>All integrations</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>Priority support</li>
+        </ul>
+        <a class="fs-btn fs-btn-primary" style="margin-top:auto">Start Pro Trial</a>
+      </div>
+      <div class="pricing-card">
+        <div class="tier">Agency</div>
+        <div class="price"><span class="dollars">$199</span><span class="per">/mo</span></div>
+        <p class="fs-small" style="margin:0">Multi-client production.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>10 team seats</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>White-label CMS</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>Dedicated manager</li>
+        </ul>
+        <a class="fs-btn fs-btn-secondary" style="margin-top:auto">Talk to Sales</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- GLASS -->
+  <section>
+    <div>
+      <h2 class="section-label">Glass card</h2>
+      <h3 class="section-title">On imagery or busy backgrounds</h3>
+      <p class="section-desc">Blurred, low-alpha surface that lets the art show through. Use for hero overlays, modals, and floating panels — never stacked against a plain background.</p>
+    </div>
+    <div class="glass-demo">
+      <div class="glass-card">
+        <div class="fs-row">
+          <span class="fs-chip fs-chip-cyan fs-chip-dot">Connected</span>
+          <span class="fs-chip">Lovable · v2</span>
+        </div>
+        <h4>Your content, every surface</h4>
+        <p>Edit once, publish everywhere. Lovable reads your schema directly — no exports, no copy-paste.</p>
+        <a class="fs-btn fs-btn-accent fs-btn-sm" style="align-self: flex-start">Open in Lovable →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTE + INTEGRATION -->
+  <section>
+    <div>
+      <h2 class="section-label">Quote + integration cards</h2>
+      <h3 class="section-title">Social proof &amp; connectors</h3>
+    </div>
+    <div class="grid-2">
+      <div class="quote-card">
+        <span class="mark">"</span>
+        <blockquote>We cut our CMS spend by 78% and shipped three client sites in the time one Contentful migration used to take.</blockquote>
+        <div class="author">
+          <div class="avatar">MK</div>
+          <div class="author-meta">
+            <div class="name">Maya Kleinfeld</div>
+            <div class="role">Principal · North Block Studio</div>
+          </div>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div class="integration-card">
+          <div class="integration-head">
+            <div class="integration-logo" style="color: var(--fs-magenta)">L</div>
+            <span class="fs-chip fs-chip-success fs-chip-dot">Connected</span>
+          </div>
+          <h4>Lovable</h4>
+          <p>AI builder reads your schema directly. Describe components; it renders against FutureStack content.</p>
+        </div>
+        <div class="integration-card">
+          <div class="integration-head">
+            <div class="integration-logo" style="color: var(--fs-cyan)">W</div>
+            <span class="fs-chip">Install</span>
+          </div>
+          <h4>Webflow</h4>
+          <p>Two-way sync with Webflow Collections. Edits in either system propagate instantly.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section>
+    <div>
+      <h2 class="section-label">CTA card</h2>
+      <h3 class="section-title">The only place a full gradient belongs</h3>
+      <p class="section-desc">Used at the bottom of marketing pages and blog posts. Exactly one per page — never two CTA cards stacked.</p>
+    </div>
+    <div class="cta-card">
+      <div>
+        <h3>Ship faster with FutureStack.</h3>
+        <p>Free forever plan. No credit card. Connect Lovable in under 60 seconds.</p>
+      </div>
+      <div class="cta-action">
+        <a class="cta-white" href="#">Start Free →</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

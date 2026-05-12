@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FutureStack — Chips &amp; Badges</title>
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+  body.fs-scope { padding: 48px 64px 80px; }
+  .page { max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 56px; }
+  header .title { font-size: 3rem; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 8px; }
+  header .sub { color: var(--fs-text-muted); font-size: 1.125rem; max-width: 680px; margin: 0; }
+  section { display: flex; flex-direction: column; gap: 20px; }
+  h2.section-label { font-family: var(--fs-font-mono); font-size: 0.75rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--fs-cyan); margin: 0 0 4px; }
+  h3.section-title { font-size: 2rem; font-weight: 700; letter-spacing: -0.01em; margin: 0; }
+  .section-desc { color: var(--fs-text-muted); max-width: 640px; margin: -8px 0 8px; }
+  .panel { background: var(--fs-surface); border: 1px solid var(--fs-border); border-radius: 12px; padding: 32px; display: flex; flex-direction: column; gap: 24px; }
+  .row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .row-label { font-family: var(--fs-font-mono); font-size: 0.6875rem; color: var(--fs-text-subtle); text-transform: uppercase; letter-spacing: 0.08em; min-width: 140px; }
+  .divider { height: 1px; background: var(--fs-border); }
+
+  .inline-examples { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .example {
+    background: var(--fs-bg-sec); border: 1px solid var(--fs-border); border-radius: 12px;
+    padding: 20px; display: flex; flex-direction: column; gap: 12px;
+  }
+  .example .title-row { display: flex; align-items: center; justify-content: space-between; }
+  .example h4 { margin: 0; font-size: 1rem; font-weight: 600; }
+  .example p { margin: 0; color: var(--fs-text-muted); font-size: 0.875rem; }
+
+  .num-badge {
+    display: inline-grid; place-items: center;
+    min-width: 20px; height: 20px; padding: 0 6px;
+    background: var(--fs-magenta); color: #fff;
+    font-family: var(--fs-font-mono); font-size: 0.6875rem; font-weight: 600;
+    border-radius: 9999px; box-shadow: var(--fs-glow-magenta);
+  }
+  .num-badge.cyan { background: var(--fs-cyan); color: #0D1B2A; box-shadow: var(--fs-glow-cyan); }
+</style>
+</head>
+<body class="fs-scope fs-bg-mesh">
+<div class="page">
+
+  <header>
+    <p class="fs-eyebrow">// 04 &nbsp;Chips &amp; Badges</p>
+    <h1 class="title">Small Labels, <span class="fs-text-gradient">Tight Signal</span></h1>
+    <p class="sub">Chips carry eyebrow-style metadata (categories, version tags, integration names). Badges carry status (live, success, warning). Mono type, uppercase, minimum 12px.</p>
+  </header>
+
+  <!-- BASE CHIPS -->
+  <section>
+    <div>
+      <h2 class="section-label">Base chips</h2>
+      <h3 class="section-title">Default and accented</h3>
+      <p class="section-desc">Neutral by default. Add a color variant only when the label means something in that color.</p>
+    </div>
+    <div class="panel">
+      <div class="row">
+        <span class="row-label">Neutral</span>
+        <span class="fs-chip">CMS</span>
+        <span class="fs-chip">Headless</span>
+        <span class="fs-chip">Drupal 11</span>
+        <span class="fs-chip">v2.4.1</span>
+        <span class="fs-chip">Beta</span>
+      </div>
+      <div class="divider"></div>
+      <div class="row">
+        <span class="row-label">Cyan · Info</span>
+        <span class="fs-chip fs-chip-cyan">New</span>
+        <span class="fs-chip fs-chip-cyan">AI Native</span>
+        <span class="fs-chip fs-chip-cyan">Featured</span>
+      </div>
+      <div class="row">
+        <span class="row-label">Magenta · Brand</span>
+        <span class="fs-chip fs-chip-magenta">Most Popular</span>
+        <span class="fs-chip fs-chip-magenta">Limited</span>
+        <span class="fs-chip fs-chip-magenta">Upgrade</span>
+      </div>
+      <div class="row">
+        <span class="row-label">Purple · Premium</span>
+        <span class="fs-chip fs-chip-purple">Pro</span>
+        <span class="fs-chip fs-chip-purple">Agency</span>
+        <span class="fs-chip fs-chip-purple">Enterprise</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATUS -->
+  <section>
+    <div>
+      <h2 class="section-label">Status dots</h2>
+      <h3 class="section-title">Live, success, warning, error</h3>
+      <p class="section-desc">A 6px dot + short label. The dot glows — it should look like a real indicator, not an illustration.</p>
+    </div>
+    <div class="panel">
+      <div class="row">
+        <span class="row-label">Operational</span>
+        <span class="fs-chip fs-chip-success fs-chip-dot">All systems</span>
+        <span class="fs-chip fs-chip-cyan fs-chip-dot">Live</span>
+        <span class="fs-chip fs-chip-success fs-chip-dot">Connected</span>
+      </div>
+      <div class="row">
+        <span class="row-label">Warn / error</span>
+        <span class="fs-chip fs-chip-dot" style="color: var(--fs-warning); border-color: rgba(255,184,79,0.4)">Degraded</span>
+        <span class="fs-chip fs-chip-dot" style="color: var(--fs-coral); border-color: rgba(255,107,74,0.4)">Disconnected</span>
+        <span class="fs-chip fs-chip-dot" style="color: var(--fs-text-muted); border-color: var(--fs-border)">Offline</span>
+      </div>
+      <div class="row">
+        <span class="row-label">Build / deploy</span>
+        <span class="fs-chip fs-chip-cyan fs-chip-dot">Deploying</span>
+        <span class="fs-chip fs-chip-success fs-chip-dot">Deployed · 12s ago</span>
+        <span class="fs-chip fs-chip-magenta fs-chip-dot">Draft</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- NUMERIC -->
+  <section>
+    <div>
+      <h2 class="section-label">Numeric badges</h2>
+      <h3 class="section-title">Counts, notifications, versions</h3>
+      <p class="section-desc">Solid fill + glow. Magenta = requires action. Cyan = informational. Never plain gray.</p>
+    </div>
+    <div class="panel">
+      <div class="row">
+        <span class="row-label">Counts</span>
+        <span class="num-badge">3</span>
+        <span class="num-badge">12</span>
+        <span class="num-badge">99+</span>
+        <span class="num-badge cyan">NEW</span>
+        <span class="num-badge cyan">BETA</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- IN CONTEXT -->
+  <section>
+    <div>
+      <h2 class="section-label">In context</h2>
+      <h3 class="section-title">How chips show up in real UI</h3>
+    </div>
+    <div class="inline-examples">
+      <div class="example">
+        <div class="title-row">
+          <h4>Lovable integration</h4>
+          <span class="fs-chip fs-chip-success fs-chip-dot">Connected</span>
+        </div>
+        <p>Webhook received 3 minutes ago · auto-publishing on save.</p>
+      </div>
+      <div class="example">
+        <div class="title-row">
+          <h4>FutureStack Pro</h4>
+          <span class="fs-chip fs-chip-magenta">Most Popular</span>
+        </div>
+        <p>Unlimited projects, 10 team seats, priority support.</p>
+      </div>
+      <div class="example">
+        <div class="title-row">
+          <h4>Schema editor</h4>
+          <div class="fs-row">
+            <span class="fs-chip fs-chip-cyan">AI Native</span>
+            <span class="fs-chip">v2.4</span>
+          </div>
+        </div>
+        <p>Describe the content you want. We build the model.</p>
+      </div>
+      <div class="example">
+        <div class="title-row">
+          <h4>API usage</h4>
+          <span class="fs-chip fs-chip-dot" style="color: var(--fs-warning); border-color: rgba(255,184,79,0.4)">82% of quota</span>
+        </div>
+        <p>Approaching monthly request limit — consider upgrading.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
