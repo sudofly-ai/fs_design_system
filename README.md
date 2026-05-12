@@ -35,13 +35,16 @@ kit.html                Everything-in-one UI kit (specimen page)
 SKILL.md                How to use this system when designing for FutureStack
 ```
 
-Every consumer imports one file:
+Every consumer imports one self-contained file and scopes it to the FutureStack surface:
 
 ```html
 <link rel="stylesheet" href="colors_and_type.css">
+<body class="fs-scope">
 ```
 
-Tokens are exposed as CSS custom properties prefixed `--fs-*` and utility classes prefixed `fs-*` so they never collide with Tailwind or other systems.
+Tokens are exposed as CSS custom properties prefixed `--fs-*` and utility classes prefixed `fs-*` so they never collide with Tailwind or other systems. Base reset and default typography only apply inside `.fs-scope`.
+
+The stylesheet does not fetch remote fonts. Self-host or otherwise load Inter, Space Grotesk, and JetBrains Mono separately when exact brand typography is required; otherwise the declared system fallbacks keep the UI usable offline and under strict CSPs.
 
 ---
 

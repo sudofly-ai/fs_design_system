@@ -8,10 +8,12 @@ This is the operator's manual — follow it when creating any new design for Fut
 
 1. **Read `README.md`** for brand positioning and principles.
 2. **Import `colors_and_type.css`** in your HTML file. One line, every token comes with it.
-3. **Open `kit.html`** in a second tab. It's the specimen page — copy-paste components from there instead of rewriting them.
+3. **Scope the surface with `.fs-scope`** on `<body>` or the top-level container so base styles do not leak into host applications.
+4. **Open `kit.html`** in a second tab. It's the specimen page — copy-paste components from there instead of rewriting them.
 
 ```html
 <link rel="stylesheet" href="colors_and_type.css">
+<body class="fs-scope fs-bg-mesh">
 ```
 
 ---

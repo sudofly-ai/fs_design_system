@@ -1,10 +1,10 @@
 /* ============================================================
    FutureStack Design System — Foundations
    Import this in every preview / consumer: <link rel="stylesheet" href="colors_and_type.css">
+   Scope base styles with .fs-scope on the body or a top-level container.
    Tokens mirror the FutureStack marketing site (Tailwind + CSS vars).
+   Load brand fonts separately if exact typography is required; this file has no remote font dependency.
    ============================================================ */
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 :root {
   /* ---------- Core surface ---------- */
@@ -105,10 +105,15 @@
 }
 
 /* ============================================================
-   Base reset
+   Scoped base reset
    ============================================================ */
-*, *::before, *::after { box-sizing: border-box; }
-html, body {
+.fs-scope,
+.fs-scope *,
+.fs-scope *::before,
+.fs-scope *::after {
+  box-sizing: border-box;
+}
+.fs-scope {
   margin: 0;
   padding: 0;
   background: var(--fs-bg);
@@ -121,7 +126,12 @@ html, body {
 }
 
 /* Headlines in preview pages (custom-styled .title / section headers) inherit display font */
-h1, h2, h3, h4 { font-family: var(--fs-font-display); }
+.fs-scope h1,
+.fs-scope h2,
+.fs-scope h3,
+.fs-scope h4 {
+  font-family: var(--fs-font-display);
+}
 
 /* ============================================================
    Typography utilities

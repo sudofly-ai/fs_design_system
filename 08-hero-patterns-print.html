@@ -5,7 +5,7 @@
 <title>FutureStack — Hero patterns</title>
 <link rel="stylesheet" href="colors_and_type.css">
 <style>
-  body { padding: 48px 64px 80px; }
+  body.fs-scope { padding: 48px 64px 80px; }
   .page { max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 56px; }
   header .title { font-size: 3rem; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 8px; }
   header .sub { color: var(--fs-text-muted); font-size: 1.125rem; max-width: 680px; margin: 0; }
@@ -144,13 +144,13 @@
   /* ---------- PRINT ---------- */
   @page { size: landscape; margin: 0.4cm; }
   @media print {
-    html, body {
+    body.fs-scope {
       background: var(--fs-bg) !important;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
-    body { padding: 0 !important; }
-    body.fs-bg-mesh { background-image: none !important; }
+    body.fs-scope { padding: 0 !important; }
+    body.fs-scope.fs-bg-mesh { background-image: none !important; }
     .page {
       max-width: none !important;
       margin: 0 !important;
@@ -181,7 +181,9 @@
     .hero-h1 { font-size: 2.75rem; }
     .hero-lead { font-size: 1rem; }
     /* Animations off, no hover */
-    *, *::before, *::after {
+    .fs-scope *,
+    .fs-scope *::before,
+    .fs-scope *::after {
       animation: none !important;
       transition: none !important;
     }
@@ -195,17 +197,8 @@
     }
   }
 </style>
-<script>
-  // Auto-print after fonts/layout settle
-  window.addEventListener('load', () => {
-    const ready = document.fonts && document.fonts.ready
-      ? document.fonts.ready
-      : Promise.resolve();
-    ready.then(() => setTimeout(() => window.print(), 500));
-  });
-</script>
 </head>
-<body class="fs-bg-mesh">
+<body class="fs-scope fs-bg-mesh">
 <div class="page">
 
   <header>
