@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FutureStack — UI Kit Specimen</title>
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+  body { padding: 64px 64px 96px; }
+  .page { max-width: 1320px; margin: 0 auto; display: flex; flex-direction: column; gap: 72px; }
+
+  .shell-header {
+    display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 24px;
+    padding-bottom: 32px; border-bottom: 1px solid var(--fs-border);
+  }
+  .shell-header img { width: 64px; height: 64px; object-fit: contain; flex-shrink: 0; }
+  .shell-header .h-title { margin: 0; font-size: 2.5rem; font-weight: 700; letter-spacing: -0.02em; }
+  .shell-header .h-sub { margin: 4px 0 0; color: var(--fs-text-muted); font-size: 1rem; }
+  .shell-header .ver { text-align: right; }
+  .shell-header .ver .label { font-family: var(--fs-font-mono); font-size: 0.75rem; color: var(--fs-text-subtle); text-transform: uppercase; letter-spacing: 0.08em; }
+  .shell-header .ver .val { font-family: var(--fs-font-mono); font-size: 0.875rem; color: var(--fs-cyan); }
+
+  /* TOC */
+  .toc {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+  }
+  .toc a {
+    padding: 14px 16px; border: 1px solid var(--fs-border); border-radius: 10px;
+    text-decoration: none; color: var(--fs-text);
+    display: flex; flex-direction: column; gap: 2px;
+    transition: all 150ms;
+  }
+  .toc a:hover { border-color: var(--fs-cyan); }
+  .toc .num { font-family: var(--fs-font-mono); font-size: 0.6875rem; color: var(--fs-cyan); }
+  .toc .name { font-weight: 600; font-size: 0.875rem; }
+
+  section { display: flex; flex-direction: column; gap: 20px; scroll-margin-top: 24px; }
+  h2.sec-eyebrow { font-family: var(--fs-font-mono); font-size: 0.75rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--fs-cyan); margin: 0 0 4px; }
+  h3.sec-title { font-size: 2rem; font-weight: 700; letter-spacing: -0.01em; margin: 0; }
+  p.sec-desc { color: var(--fs-text-muted); max-width: 640px; margin: -8px 0 8px; font-size: 1rem; line-height: 1.6; }
+  .panel { background: var(--fs-surface); border: 1px solid var(--fs-border); border-radius: 12px; padding: 28px; display: flex; flex-direction: column; gap: 20px; }
+  .row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .row-label { font-family: var(--fs-font-mono); font-size: 0.6875rem; color: var(--fs-text-subtle); text-transform: uppercase; letter-spacing: 0.08em; min-width: 120px; }
+
+  /* mini swatches */
+  .mini-swatches { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+  .mini-swatch { display: flex; flex-direction: column; gap: 6px; }
+  .mini-swatch .chip { height: 64px; border-radius: 8px; border: 1px solid var(--fs-border); }
+  .mini-swatch .label { font-family: var(--fs-font-mono); font-size: 0.6875rem; color: var(--fs-text-muted); }
+  .mini-swatch .hex { font-family: var(--fs-font-mono); font-size: 0.6875rem; color: var(--fs-text-subtle); }
+
+  /* type specimen mini */
+  .type-mini { display: flex; flex-direction: column; gap: 14px; }
+
+  /* feature row */
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .feature {
+    background: var(--fs-bg-sec); border: 1px solid var(--fs-border);
+    border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 12px;
+  }
+  .feature-icon {
+    width: 40px; height: 40px; border-radius: 8px; display: grid; place-items: center;
+    background: rgba(0,212,255,0.12); color: var(--fs-cyan); border: 1px solid rgba(0,212,255,0.25);
+  }
+  .feature-icon.m { background: rgba(233,30,140,0.12); color: var(--fs-magenta); border-color: rgba(233,30,140,0.25); }
+  .feature-icon.p { background: rgba(123,47,255,0.15); color: var(--fs-violet); border-color: rgba(123,47,255,0.25); }
+  .feature h4 { margin: 0; font-size: 1rem; font-weight: 600; }
+  .feature p { margin: 0; color: var(--fs-text-muted); font-size: 0.8125rem; line-height: 1.5; }
+  svg.icon { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* stats strip */
+  .stats-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--fs-border); border-radius: 12px; overflow: hidden; background: var(--fs-surface); }
+  .stat-cell { padding: 24px; border-right: 1px solid var(--fs-border); }
+  .stat-cell:last-child { border-right: 0; }
+  .stat-cell .v { font-family: var(--fs-font-mono); font-weight: 700; font-size: 2rem; letter-spacing: -0.02em; }
+  .stat-cell .v.grad { background: var(--fs-grad-text); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .stat-cell .l { font-family: var(--fs-font-mono); font-size: 0.6875rem; color: var(--fs-text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
+
+  /* pricing mini */
+  .pricing { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .pricing-card {
+    background: var(--fs-surface); border: 1px solid var(--fs-border);
+    border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 14px;
+    position: relative;
+  }
+  .pricing-card.pop {
+    background: linear-gradient(var(--fs-surface), var(--fs-surface)) padding-box, var(--fs-grad-primary) border-box;
+    border: 1.5px solid transparent; box-shadow: 0 0 28px rgba(233,30,140,0.18);
+  }
+  .pricing-card .tier { font-family: var(--fs-font-mono); font-size: 0.6875rem; color: var(--fs-cyan); text-transform: uppercase; letter-spacing: 0.1em; }
+  .pricing-card .price { display: baseline; }
+  .pricing-card .dollars { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; }
+  .pricing-card .per { color: var(--fs-text-muted); font-size: 0.75rem; margin-left: 2px; }
+  .pricing-card ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; font-size: 0.8125rem; color: var(--fs-text-muted); }
+  .pricing-card ul li::before { content: '✓'; color: var(--fs-cyan); margin-right: 8px; font-weight: 700; }
+  .popular-ribbon {
+    position: absolute; top: -10px; left: 16px;
+    background: var(--fs-grad-primary); color: #fff;
+    font-family: var(--fs-font-mono); font-size: 0.625rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    padding: 4px 10px; border-radius: 9999px;
+  }
+
+  /* nav preview */
+  .navp {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px; border: 1px solid var(--fs-border); border-radius: 12px;
+    background: rgba(13,27,42,0.7); backdrop-filter: blur(12px);
+  }
+  .navp .l { display: flex; align-items: center; gap: 32px; }
+  .navp .logo { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.125rem; }
+  .navp .logo img { width: 40px; height: 40px; object-fit: contain; flex-shrink: 0; }
+  .navp .links { display: flex; gap: 4px; }
+  .navp .links a { padding: 6px 12px; font-size: 0.8125rem; color: var(--fs-text-muted); border-radius: 6px; text-decoration: none; }
+  .navp .links a.on { color: var(--fs-cyan); }
+
+  /* hero mini */
+  .hero-mini {
+    border: 1px solid var(--fs-border); border-radius: 16px; overflow: hidden;
+    position: relative; min-height: 320px; padding: 48px;
+    background-color: var(--fs-bg);
+    background-image:
+      radial-gradient(circle at 15% 25%, rgba(123,47,255,0.28), transparent 45%),
+      radial-gradient(circle at 85% 20%, rgba(233,30,140,0.22), transparent 45%),
+      radial-gradient(circle at 50% 95%, rgba(0,212,255,0.18), transparent 50%);
+    display: grid; grid-template-columns: 1.3fr 1fr; align-items: center; gap: 32px;
+  }
+  .hero-mini h2 { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.02em; margin: 12px 0; line-height: 1.1; }
+  .hero-mini p { margin: 0 0 20px; color: var(--fs-text-muted); max-width: 440px; }
+  .hero-mini img { width: 100%; max-width: 260px; justify-self: center; }
+
+  .footer-note { text-align: center; color: var(--fs-text-subtle); font-size: 0.8125rem; padding-top: 40px; border-top: 1px solid var(--fs-border); }
+</style>
+</head>
+<body class="fs-bg-mesh">
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="shell-header">
+    <img src="assets/futureproof-icon.png" alt="">
+    <div>
+      <h1 class="h-title">FutureStack UI Kit</h1>
+      <p class="h-sub">Everything-in-one specimen · the whole system, one page.</p>
+    </div>
+    <div class="ver">
+      <div class="label">Version</div>
+      <div class="val">v1.0 · 2026</div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc">
+    <a href="#foundations"><span class="num">01</span><span class="name">Foundations</span></a>
+    <a href="#logo"><span class="num">02</span><span class="name">Logo &amp; icon</span></a>
+    <a href="#buttons"><span class="num">03</span><span class="name">Buttons</span></a>
+    <a href="#chips"><span class="num">04</span><span class="name">Chips &amp; badges</span></a>
+    <a href="#cards"><span class="num">05</span><span class="name">Cards</span></a>
+    <a href="#forms"><span class="num">06</span><span class="name">Forms</span></a>
+    <a href="#nav"><span class="num">07</span><span class="name">Navigation</span></a>
+    <a href="#hero"><span class="num">08</span><span class="name">Hero patterns</span></a>
+  </div>
+
+  <!-- FOUNDATIONS -->
+  <section id="foundations">
+    <div><h2 class="sec-eyebrow">// 01 · Foundations</h2><h3 class="sec-title">Colors, type, spacing</h3><p class="sec-desc">The raw tokens. All imported from <span class="fs-mono fs-muted">colors_and_type.css</span>.</p></div>
+    <div class="panel">
+      <div class="mini-swatches">
+        <div class="mini-swatch"><div class="chip" style="background:#0D1B2A"></div><span class="label">bg</span><span class="hex">#0D1B2A</span></div>
+        <div class="mini-swatch"><div class="chip" style="background:#1a1f2e"></div><span class="label">surface</span><span class="hex">#1a1f2e</span></div>
+        <div class="mini-swatch"><div class="chip" style="background:#00D4FF"></div><span class="label">cyan</span><span class="hex">#00D4FF</span></div>
+        <div class="mini-swatch"><div class="chip" style="background:#E91E8C"></div><span class="label">magenta</span><span class="hex">#E91E8C</span></div>
+        <div class="mini-swatch"><div class="chip" style="background:#7B2FFF"></div><span class="label">purple</span><span class="hex">#7B2FFF</span></div>
+        <div class="mini-swatch"><div class="chip" style="background:linear-gradient(135deg,#00D4FF,#E91E8C)"></div><span class="label">gradient</span><span class="hex">cy→ma</span></div>
+      </div>
+
+      <div style="height:1px;background:var(--fs-border)"></div>
+
+      <div class="type-mini">
+        <div class="fs-display">Display · 72</div>
+        <div class="fs-h1">Headline 1 · 56 · Inter 700</div>
+        <div class="fs-h2">Headline 2 <span class="fs-text-gradient">with gradient</span></div>
+        <div class="fs-lead">Lead 18 · color muted · ideal for subheads and section intros</div>
+        <div class="fs-body">Body 16 · the default paragraph size for the whole system</div>
+        <div class="fs-small">Small 14 · caption + dense UI</div>
+        <div class="fs-eyebrow">// Eyebrow · JetBrains Mono</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOGO -->
+  <section id="logo">
+    <div><h2 class="sec-eyebrow">// 02 · Logo &amp; icon</h2><h3 class="sec-title">The mark in placement</h3></div>
+    <div class="panel" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+      <div style="background: #0D1B2A; border-radius: 12px; padding: 40px; display: grid; place-items: center; border: 1px solid var(--fs-border)">
+        <img src="assets/futureproof-icon.png" alt="" style="width: 96px">
+      </div>
+      <div style="background: var(--fs-grad-primary); border-radius: 12px; padding: 40px; display: grid; place-items: center">
+        <img src="assets/futureproof-icon.png" alt="" style="width: 96px">
+      </div>
+      <div style="background: #f8fafc; border-radius: 12px; padding: 40px; display: grid; place-items: center">
+        <img src="assets/futureproof-icon.png" alt="" style="width: 96px">
+      </div>
+    </div>
+  </section>
+
+  <!-- BUTTONS -->
+  <section id="buttons">
+    <div><h2 class="sec-eyebrow">// 03 · Buttons</h2><h3 class="sec-title">One primary. Always.</h3></div>
+    <div class="panel">
+      <div class="row">
+        <span class="row-label">Primary</span>
+        <a class="fs-btn fs-btn-primary">Start Free</a>
+        <a class="fs-btn fs-btn-primary">Start Free →</a>
+        <a class="fs-btn fs-btn-primary fs-btn-lg">Start Free</a>
+      </div>
+      <div class="row">
+        <span class="row-label">Secondary</span>
+        <a class="fs-btn fs-btn-secondary">Schedule a Demo</a>
+        <a class="fs-btn fs-btn-secondary fs-btn-lg">View Docs</a>
+      </div>
+      <div class="row">
+        <span class="row-label">Ghost · Accent</span>
+        <a class="fs-btn fs-btn-ghost">Pricing</a>
+        <a class="fs-btn fs-btn-ghost">Integrations</a>
+        <a class="fs-btn fs-btn-accent">Connect Lovable</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHIPS -->
+  <section id="chips">
+    <div><h2 class="sec-eyebrow">// 04 · Chips &amp; badges</h2><h3 class="sec-title">Tight, mono, meaningful</h3></div>
+    <div class="panel">
+      <div class="row">
+        <span class="fs-chip">Neutral</span>
+        <span class="fs-chip fs-chip-cyan">New</span>
+        <span class="fs-chip fs-chip-magenta">Most Popular</span>
+        <span class="fs-chip fs-chip-purple">Pro</span>
+        <span class="fs-chip fs-chip-success fs-chip-dot">Live</span>
+        <span class="fs-chip fs-chip-cyan fs-chip-dot">Deploying</span>
+        <span class="fs-chip fs-chip-dot" style="color: var(--fs-warning); border-color: rgba(255,184,79,0.4)">Degraded</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARDS -->
+  <section id="cards">
+    <div><h2 class="sec-eyebrow">// 05 · Cards</h2><h3 class="sec-title">Feature &middot; stat &middot; pricing</h3></div>
+
+    <!-- Feature grid -->
+    <div class="grid-3">
+      <div class="feature">
+        <div class="feature-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg></div>
+        <h4>Structured content</h4>
+        <p>Define your schema once. Every channel reads the same source of truth.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon m"><svg class="icon" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+        <h4>Instant webhooks</h4>
+        <p>Edits propagate to every connected surface in under a second.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon p"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.2 4.2l2.8 2.8M17 17l2.8 2.8M1 12h4M19 12h4M4.2 19.8L7 17M17 7l2.8-2.8"/></svg></div>
+        <h4>AI native schema</h4>
+        <p>Describe the content you want. FutureStack generates the model.</p>
+      </div>
+    </div>
+
+    <!-- Stats strip -->
+    <div class="stats-strip">
+      <div class="stat-cell"><div class="v grad">$0.24</div><div class="l">Per 1k requests</div></div>
+      <div class="stat-cell"><div class="v">10×</div><div class="l">Faster publish</div></div>
+      <div class="stat-cell"><div class="v">500+</div><div class="l">Integrations</div></div>
+      <div class="stat-cell"><div class="v">99.99%</div><div class="l">Uptime SLA</div></div>
+    </div>
+
+    <!-- Pricing -->
+    <div class="pricing">
+      <div class="pricing-card">
+        <div class="tier">Free</div>
+        <div class="price"><span class="dollars">$0</span><span class="per">/mo</span></div>
+        <ul><li>1 project</li><li>1k calls</li><li>Community support</li></ul>
+        <a class="fs-btn fs-btn-secondary fs-btn-sm" style="margin-top:auto">Start Free</a>
+      </div>
+      <div class="pricing-card">
+        <div class="tier">Starter</div>
+        <div class="price"><span class="dollars">$29</span><span class="per">/mo</span></div>
+        <ul><li>5 projects</li><li>50k calls</li><li>Lovable + Webflow</li></ul>
+        <a class="fs-btn fs-btn-secondary fs-btn-sm" style="margin-top:auto">Choose</a>
+      </div>
+      <div class="pricing-card pop">
+        <span class="popular-ribbon">Most Popular</span>
+        <div class="tier">Pro</div>
+        <div class="price"><span class="dollars">$79</span><span class="per">/mo</span></div>
+        <ul><li>Unlimited projects</li><li>500k calls</li><li>All integrations</li><li>Priority support</li></ul>
+        <a class="fs-btn fs-btn-primary fs-btn-sm" style="margin-top:auto">Start Pro Trial</a>
+      </div>
+      <div class="pricing-card">
+        <div class="tier">Agency</div>
+        <div class="price"><span class="dollars">$199</span><span class="per">/mo</span></div>
+        <ul><li>10 team seats</li><li>White-label</li><li>Dedicated CSM</li></ul>
+        <a class="fs-btn fs-btn-secondary fs-btn-sm" style="margin-top:auto">Talk to Sales</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORMS -->
+  <section id="forms">
+    <div><h2 class="sec-eyebrow">// 06 · Forms</h2><h3 class="sec-title">Dark-native inputs</h3></div>
+    <div class="panel" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+      <div>
+        <label style="display:block; font-size: 0.8125rem; font-weight: 500; margin-bottom: 8px;">Work email</label>
+        <input class="fs-input" placeholder="you@company.com">
+      </div>
+      <div>
+        <label style="display:block; font-size: 0.8125rem; font-weight: 500; margin-bottom: 8px;">Work email · focused</label>
+        <input class="fs-input" value="maya@northblock.co" style="border-color: var(--fs-cyan); box-shadow: 0 0 0 3px rgba(0,212,255,0.15);">
+      </div>
+      <div>
+        <label style="display:block; font-size: 0.8125rem; font-weight: 500; margin-bottom: 8px;">Team size</label>
+        <select class="fs-input" style="appearance:none; background-image: url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%239ca3af' stroke-width='1.5' fill='none'/></svg>&quot;); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px;"><option>Just me</option><option>2–5</option><option>6–20</option></select>
+      </div>
+      <div>
+        <label style="display:block; font-size: 0.8125rem; font-weight: 500; margin-bottom: 8px;">What are you building?</label>
+        <textarea class="fs-input" style="resize: vertical; min-height: 72px; font-family: var(--fs-font-sans);" placeholder="A quick sentence…"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- NAV -->
+  <section id="nav">
+    <div><h2 class="sec-eyebrow">// 07 · Navigation</h2><h3 class="sec-title">Top nav preview</h3></div>
+    <div class="navp">
+      <div class="l">
+        <div class="logo"><img src="assets/futureproof-icon.png" alt="">FutureStack</div>
+        <div class="links">
+          <a>Features</a><a class="on">Integrations</a><a>Pricing</a><a>Docs</a>
+        </div>
+      </div>
+      <div class="row" style="gap: 8px;">
+        <a class="fs-btn fs-btn-ghost fs-btn-sm">Log In</a>
+        <a class="fs-btn fs-btn-primary fs-btn-sm">Start Free →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div><h2 class="sec-eyebrow">// 08 · Hero patterns</h2><h3 class="sec-title">Mesh + split</h3></div>
+    <div class="hero-mini">
+      <div>
+        <p class="fs-eyebrow">// Drupal CMS · AI native</p>
+        <h2>The AI-Powered Backend <span class="fs-text-gradient">Your Tools Need</span></h2>
+        <p>Connect once to FutureStack. Ship with Lovable today, Webflow tomorrow, whatever comes next.</p>
+        <div class="row">
+          <a class="fs-btn fs-btn-primary">Start Free →</a>
+          <a class="fs-btn fs-btn-secondary">Schedule a Demo</a>
+        </div>
+      </div>
+      <img src="assets/hero-sphere.png" alt="" class="fs-animate-float">
+    </div>
+  </section>
+
+  <div class="footer-note">FutureStack Design System · v1.0 · See <span class="fs-mono fs-muted">SKILL.md</span> before designing.</div>
+
+</div>
+</body>
+</html>

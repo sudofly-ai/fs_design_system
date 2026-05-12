@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FutureStack — Foundations</title>
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+  body { padding: 48px 64px 80px; }
+  .page { max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 64px; }
+  header .title { font-size: 3rem; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 8px; }
+  header .sub { color: var(--fs-text-muted); font-size: 1.125rem; max-width: 640px; margin: 0; }
+  section { display: flex; flex-direction: column; gap: 24px; }
+  h2.section-label {
+    font-family: var(--fs-font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--fs-cyan);
+    margin: 0 0 4px;
+  }
+  h3.section-title { font-size: 2rem; font-weight: 700; letter-spacing: -0.01em; margin: 0; }
+  .section-desc { color: var(--fs-text-muted); max-width: 640px; margin: -8px 0 8px; }
+
+  /* ---- Color swatches ---- */
+  .swatch-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .swatch {
+    background: var(--fs-surface);
+    border: 1px solid var(--fs-border);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .swatch-color { height: 96px; }
+  .swatch-meta { padding: 12px 16px 14px; display: flex; flex-direction: column; gap: 2px; }
+  .swatch-name { font-weight: 600; font-size: 0.875rem; }
+  .swatch-hex  { font-family: var(--fs-font-mono); font-size: 0.75rem; color: var(--fs-text-muted); }
+  .swatch-token { font-family: var(--fs-font-mono); font-size: 0.6875rem; color: var(--fs-text-subtle); }
+
+  /* ---- Gradient swatches ---- */
+  .grad-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .grad {
+    height: 128px; border-radius: 12px; position: relative; overflow: hidden;
+    border: 1px solid var(--fs-border);
+  }
+  .grad-label {
+    position: absolute; left: 14px; bottom: 12px;
+    font-family: var(--fs-font-mono); font-size: 0.6875rem;
+    color: rgba(255,255,255,0.9);
+    background: rgba(0,0,0,0.35); padding: 3px 8px; border-radius: 9999px;
+    backdrop-filter: blur(6px);
+  }
+
+  /* ---- Type specimen ---- */
+  .type-row {
+    display: grid;
+    grid-template-columns: 120px 1fr 160px;
+    align-items: baseline;
+    gap: 24px;
+    padding: 20px 0;
+    border-top: 1px solid var(--fs-border);
+  }
+  .type-row:last-child { border-bottom: 1px solid var(--fs-border); }
+  .type-label { font-family: var(--fs-font-mono); font-size: 0.75rem; color: var(--fs-text-muted); }
+  .type-spec  { font-family: var(--fs-font-mono); font-size: 0.6875rem; color: var(--fs-text-subtle); text-align: right; }
+
+  /* ---- Radius ---- */
+  .radius-row { display: flex; gap: 24px; align-items: flex-end; }
+  .radius-tile {
+    width: 96px; height: 96px;
+    background: var(--fs-surface);
+    border: 1px solid var(--fs-border-2);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--fs-font-mono); font-size: 0.6875rem;
+    color: var(--fs-text-muted);
+  }
+  .radius-col { display: flex; flex-direction: column; gap: 8px; align-items: center; }
+  .radius-name { font-family: var(--fs-font-mono); font-size: 0.6875rem; color: var(--fs-text-subtle); }
+
+
+  /* ---- Shadow ---- */
+  .shadow-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .shadow-tile {
+    height: 128px; background: var(--fs-surface); border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--fs-font-mono); font-size: 0.75rem; color: var(--fs-text-muted);
+  }
+
+  /* ---- Motion ---- */
+  .motion-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .motion-card {
+    background: var(--fs-surface); border: 1px solid var(--fs-border);
+    border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 16px;
+  }
+  .motion-dot {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: var(--fs-grad-primary);
+    box-shadow: var(--fs-glow-magenta);
+  }
+  .motion-name { font-weight: 600; font-size: 1.125rem; }
+  .motion-meta { font-family: var(--fs-font-mono); font-size: 0.75rem; color: var(--fs-text-muted); }
+
+  /* ---- Spacing ---- */
+  .spacing-row { display: flex; flex-direction: column; gap: 12px; }
+  .spacing-bar { display: grid; grid-template-columns: 80px 1fr 120px; align-items: center; gap: 16px; }
+  .spacing-bar .fill { background: var(--fs-cyan); height: 12px; border-radius: 2px; box-shadow: var(--fs-glow-cyan); }
+  .spacing-name { font-family: var(--fs-font-mono); font-size: 0.75rem; color: var(--fs-text-muted); }
+  .spacing-px   { font-family: var(--fs-font-mono); font-size: 0.75rem; color: var(--fs-text-subtle); text-align: right; }
+</style>
+<script>
+  // PPTX export navigator: shows one section at a time
+  window.__pptxGoTo = function(idx) {
+    try {
+      var items = [document.querySelector('header')];
+      var sections = document.querySelectorAll('.page > section');
+      for (var i = 0; i < sections.length; i++) items.push(sections[i]);
+      for (var j = 0; j < items.length; j++) {
+        if (items[j]) items[j].style.display = (j === idx) ? 'block' : 'none';
+      }
+      var page = document.querySelector('.page');
+      if (page) { page.style.gap = '0'; page.style.padding = '32px 64px'; page.style.maxWidth = 'none'; }
+      document.body.style.padding = '0';
+    } catch (e) { console.error('pptxGoTo', e); }
+    return true;
+  };
+</script>
+</head>
+<body class="fs-bg-mesh">
+<div class="page">
+
+  <header>
+    <p class="fs-eyebrow">// 01 &nbsp;Foundations</p>
+    <h1 class="title">Colors, Type, and the Rest of the <span class="fs-text-gradient">Atoms</span></h1>
+    <p class="sub">The raw tokens every FutureStack surface pulls from. Exposed as CSS custom properties (<span class="fs-mono fs-muted">--fs-*</span>) and utility classes (<span class="fs-mono fs-muted">.fs-*</span>).</p>
+  </header>
+
+  <!-- ============ CORE SURFACE ============ -->
+  <section>
+    <div>
+      <h2 class="section-label">Core surface</h2>
+      <h3 class="section-title">Dark by default</h3>
+      <p class="section-desc">FutureStack lives on deep navy. Layers step down in value, never up — we never introduce white surfaces outside of glass.</p>
+    </div>
+    <div class="swatch-grid">
+      <div class="swatch">
+        <div class="swatch-color" style="background:#0D1B2A"></div>
+        <div class="swatch-meta"><div class="swatch-name">Background</div><div class="swatch-hex">#0D1B2A</div><div class="swatch-token">--fs-bg</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#0a1420"></div>
+        <div class="swatch-meta"><div class="swatch-name">Background alt</div><div class="swatch-hex">#0a1420</div><div class="swatch-token">--fs-bg-sec</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#1a1f2e"></div>
+        <div class="swatch-meta"><div class="swatch-name">Surface</div><div class="swatch-hex">#1a1f2e</div><div class="swatch-token">--fs-surface</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#242a3d"></div>
+        <div class="swatch-meta"><div class="swatch-name">Surface raised</div><div class="swatch-hex">#242a3d</div><div class="swatch-token">--fs-surface-2</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ACCENT COLOR ============ -->
+  <section>
+    <div>
+      <h2 class="section-label">Signature accents</h2>
+      <h3 class="section-title">Cyan, Magenta, Purple</h3>
+      <p class="section-desc">Three accents carry the brand. Cyan = info &amp; links. Magenta = CTA &amp; brand moments. Purple = deep accent &amp; gradient anchor.</p>
+    </div>
+    <div class="swatch-grid">
+      <div class="swatch">
+        <div class="swatch-color" style="background:#00D4FF; box-shadow: inset 0 0 40px rgba(0,212,255,0.6)"></div>
+        <div class="swatch-meta"><div class="swatch-name">Cyan</div><div class="swatch-hex">#00D4FF</div><div class="swatch-token">--fs-cyan</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#E91E8C; box-shadow: inset 0 0 40px rgba(233,30,140,0.6)"></div>
+        <div class="swatch-meta"><div class="swatch-name">Magenta</div><div class="swatch-hex">#E91E8C</div><div class="swatch-token">--fs-magenta</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#7B2FFF; box-shadow: inset 0 0 40px rgba(123,47,255,0.6)"></div>
+        <div class="swatch-meta"><div class="swatch-name">Purple</div><div class="swatch-hex">#7B2FFF</div><div class="swatch-token">--fs-purple</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: linear-gradient(135deg,#00D4FF 0%,#E91E8C 100%)"></div>
+        <div class="swatch-meta"><div class="swatch-name">Brand gradient</div><div class="swatch-hex">cyan → magenta</div><div class="swatch-token">--fs-grad-text</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SECONDARY ============ -->
+  <section>
+    <div>
+      <h2 class="section-label">Secondary &amp; semantic</h2>
+      <h3 class="section-title">Used sparingly</h3>
+      <p class="section-desc">Coral, teal, and violet earn their place when status or warmth is needed. Never compete with the primary three.</p>
+    </div>
+    <div class="swatch-grid">
+      <div class="swatch">
+        <div class="swatch-color" style="background:#FF6B4A"></div>
+        <div class="swatch-meta"><div class="swatch-name">Coral</div><div class="swatch-hex">#FF6B4A</div><div class="swatch-token">--fs-coral · danger</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#4FFFB0"></div>
+        <div class="swatch-meta"><div class="swatch-name">Teal</div><div class="swatch-hex">#4FFFB0</div><div class="swatch-token">--fs-teal · success</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#9D8CFF"></div>
+        <div class="swatch-meta"><div class="swatch-name">Violet</div><div class="swatch-hex">#9D8CFF</div><div class="swatch-token">--fs-violet</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#FFB84F"></div>
+        <div class="swatch-meta"><div class="swatch-name">Amber</div><div class="swatch-hex">#FFB84F</div><div class="swatch-token">--fs-warning</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GRADIENTS ============ -->
+  <section>
+    <div>
+      <h2 class="section-label">Gradients</h2>
+      <h3 class="section-title">Four named recipes</h3>
+      <p class="section-desc">Stop inventing gradients. Pick one of these four.</p>
+    </div>
+    <div class="grad-grid">
+      <div class="grad" style="background: linear-gradient(135deg,#E91E8C 0%,#7B2FFF 100%)">
+        <span class="grad-label">--fs-grad-primary · CTA</span>
+      </div>
+      <div class="grad" style="background: linear-gradient(135deg,#00D4FF 0%,#E91E8C 100%)">
+        <span class="grad-label">--fs-grad-text · display</span>
+      </div>
+      <div class="grad" style="background: linear-gradient(135deg,#00D4FF 0%,#7B2FFF 100%)">
+        <span class="grad-label">--fs-grad-cool · integrations</span>
+      </div>
+      <div class="grad" style="background: linear-gradient(135deg,#E91E8C 0%,#FF6B4A 100%)">
+        <span class="grad-label">--fs-grad-warm · activity</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TYPE ============ -->
+  <section>
+    <div>
+      <h2 class="section-label">Type</h2>
+      <h3 class="section-title">Inter + JetBrains Mono</h3>
+      <p class="section-desc">Inter for everything expressive. JetBrains Mono for eyebrows, stats, and technical labels — the "machinery underneath".</p>
+    </div>
+    <div>
+      <div class="type-row">
+        <div class="type-label">Display</div>
+        <div class="fs-display">The AI-Powered Backend</div>
+        <div class="type-spec">72 / 700 / -0.02em</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">H1</div>
+        <div class="fs-h1">Ship Faster With FutureStack</div>
+        <div class="type-spec">56 / 700 / -0.02em</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">H2</div>
+        <div class="fs-h2">Works With <span class="fs-text-gradient">Your Favorite Tools</span></div>
+        <div class="type-spec">40 / 700 / -0.01em</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">H3</div>
+        <div class="fs-h3">One backend, every frontend.</div>
+        <div class="type-spec">32 / 600</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">H4</div>
+        <div class="fs-h4">Built for no-code builders</div>
+        <div class="type-spec">24 / 600</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">Lead</div>
+        <div class="fs-lead">The CMS backend that actually understands your no-code workflow. Connect once, ship forever.</div>
+        <div class="type-spec">18 / 400 / muted</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">Body</div>
+        <div class="fs-body">Connect FutureStack to Lovable, Webflow, v0, and Cursor. Your AI builder reads the schema, your editors publish to it, and the preview updates in real time.</div>
+        <div class="type-spec">16 / 400</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">Small</div>
+        <div class="fs-small">Caption-sized body. Used in cards, footnotes, metadata rows.</div>
+        <div class="type-spec">14 / 400 / muted</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">Eyebrow</div>
+        <div class="fs-eyebrow">// Integrations · Version 2.4</div>
+        <div class="type-spec">Mono 12 / 500 / +0.08em</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">Mono inline</div>
+        <div class="fs-body">Run <span class="fs-mono fs-muted">npx futurestack init</span> to connect.</div>
+        <div class="type-spec">JetBrains Mono</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RADIUS ============ -->
+  <section>
+    <div>
+      <h2 class="section-label">Radius</h2>
+      <h3 class="section-title">Subtle by default</h3>
+      <p class="section-desc">Brand default is 4px — never fully rounded containers. Pills (<span class="fs-mono fs-muted">full</span>) are reserved for chips and avatars only.</p>
+    </div>
+    <div class="radius-row">
+      <div class="radius-col"><div class="radius-tile" style="border-radius:2px">2</div><div class="radius-name">xs · chips</div></div>
+      <div class="radius-col"><div class="radius-tile" style="border-radius:4px">4</div><div class="radius-name">sm · default</div></div>
+      <div class="radius-col"><div class="radius-tile" style="border-radius:8px">8</div><div class="radius-name">md · buttons</div></div>
+      <div class="radius-col"><div class="radius-tile" style="border-radius:12px">12</div><div class="radius-name">lg · cards</div></div>
+      <div class="radius-col"><div class="radius-tile" style="border-radius:16px">16</div><div class="radius-name">xl · panels</div></div>
+      <div class="radius-col"><div class="radius-tile" style="border-radius:9999px">∞</div><div class="radius-name">full · pills</div></div>
+    </div>
+  </section>
+
+  <!-- ============ SHADOW + GLOW ============ -->
+  <section>
+    <div>
+      <h2 class="section-label">Shadow &amp; glow</h2>
+      <h3 class="section-title">Dropshadows for depth, glow for intent</h3>
+      <p class="section-desc">Shadow lives on cards that sit on top of something. Glow marks intent — CTAs, active states, "live".</p>
+    </div>
+    <div class="shadow-row">
+      <div class="shadow-tile" style="box-shadow: var(--fs-shadow-sm)">shadow-sm</div>
+      <div class="shadow-tile" style="box-shadow: var(--fs-shadow-md)">shadow-md</div>
+      <div class="shadow-tile" style="box-shadow: var(--fs-shadow-lg)">shadow-lg</div>
+      <div class="shadow-tile" style="box-shadow: var(--fs-shadow-xl)">shadow-xl</div>
+      <div class="shadow-tile" style="box-shadow: var(--fs-glow-cyan); color: var(--fs-cyan)">glow-cyan</div>
+      <div class="shadow-tile" style="box-shadow: var(--fs-glow-magenta); color: var(--fs-magenta)">glow-magenta</div>
+      <div class="shadow-tile" style="box-shadow: var(--fs-glow-purple); color: var(--fs-violet)">glow-purple</div>
+      <div class="shadow-tile fs-animate-pulse" style="color: var(--fs-cyan)">pulse · live</div>
+    </div>
+  </section>
+
+  <!-- ============ MOTION ============ -->
+  <section>
+    <div>
+      <h2 class="section-label">Motion</h2>
+      <h3 class="section-title">Three speeds, one easing</h3>
+      <p class="section-desc">Everything eases with <span class="fs-mono fs-muted">cubic-bezier(0.2, 0.8, 0.2, 1)</span>. Reduced-motion is respected automatically for <span class="fs-mono fs-muted">.fs-animate-*</span>.</p>
+    </div>
+    <div class="motion-row">
+      <div class="motion-card">
+        <div class="motion-dot fs-animate-float"></div>
+        <div>
+          <div class="motion-name">Float</div>
+          <div class="motion-meta">4s · hero artwork</div>
+        </div>
+      </div>
+      <div class="motion-card">
+        <div class="motion-dot fs-animate-pulse" style="background: var(--fs-cyan); box-shadow: var(--fs-glow-cyan)"></div>
+        <div>
+          <div class="motion-name">Pulse glow</div>
+          <div class="motion-meta">2.4s · live indicator</div>
+        </div>
+      </div>
+      <div class="motion-card">
+        <div class="motion-dot fs-animate-spin" style="background: var(--fs-grad-cool); border-radius: 50%"></div>
+        <div>
+          <div class="motion-name">Spin slow</div>
+          <div class="motion-meta">18s · orbit decorations</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SPACING ============ -->
+  <section>
+    <div>
+      <h2 class="section-label">Spacing scale</h2>
+      <h3 class="section-title">Multiples of 4</h3>
+      <p class="section-desc">Standard 4/8 grid. Components live on the lower half; section padding pulls from the upper half.</p>
+    </div>
+    <div class="spacing-row">
+      <div class="spacing-bar"><div class="spacing-name">--fs-space-1</div><div><div class="fill" style="width: 4px"></div></div><div class="spacing-px">4px</div></div>
+      <div class="spacing-bar"><div class="spacing-name">--fs-space-2</div><div><div class="fill" style="width: 8px"></div></div><div class="spacing-px">8px</div></div>
+      <div class="spacing-bar"><div class="spacing-name">--fs-space-3</div><div><div class="fill" style="width: 12px"></div></div><div class="spacing-px">12px</div></div>
+      <div class="spacing-bar"><div class="spacing-name">--fs-space-4</div><div><div class="fill" style="width: 16px"></div></div><div class="spacing-px">16px</div></div>
+      <div class="spacing-bar"><div class="spacing-name">--fs-space-5</div><div><div class="fill" style="width: 24px"></div></div><div class="spacing-px">24px</div></div>
+      <div class="spacing-bar"><div class="spacing-name">--fs-space-6</div><div><div class="fill" style="width: 32px"></div></div><div class="spacing-px">32px</div></div>
+      <div class="spacing-bar"><div class="spacing-name">--fs-space-7</div><div><div class="fill" style="width: 48px"></div></div><div class="spacing-px">48px</div></div>
+      <div class="spacing-bar"><div class="spacing-name">--fs-space-8</div><div><div class="fill" style="width: 64px"></div></div><div class="spacing-px">64px</div></div>
+      <div class="spacing-bar"><div class="spacing-name">--fs-space-9</div><div><div class="fill" style="width: 96px"></div></div><div class="spacing-px">96px</div></div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

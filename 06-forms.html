@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FutureStack — Forms</title>
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+  body { padding: 48px 64px 80px; }
+  .page { max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 56px; }
+  header .title { font-size: 3rem; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 8px; }
+  header .sub { color: var(--fs-text-muted); font-size: 1.125rem; max-width: 680px; margin: 0; }
+  section { display: flex; flex-direction: column; gap: 20px; }
+  h2.section-label { font-family: var(--fs-font-mono); font-size: 0.75rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--fs-cyan); margin: 0 0 4px; }
+  h3.section-title { font-size: 2rem; font-weight: 700; letter-spacing: -0.01em; margin: 0; }
+  .section-desc { color: var(--fs-text-muted); max-width: 640px; margin: -8px 0 8px; }
+  .panel { background: var(--fs-surface); border: 1px solid var(--fs-border); border-radius: 12px; padding: 32px; display: flex; flex-direction: column; gap: 24px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .field-label { display: block; font-size: 0.8125rem; font-weight: 500; color: var(--fs-text); margin-bottom: 8px; }
+  .field-hint  { font-size: 0.75rem; color: var(--fs-text-subtle); margin-top: 6px; }
+  .field-error { font-size: 0.75rem; color: var(--fs-coral); margin-top: 6px; display: flex; align-items: center; gap: 4px; }
+  .field-ok    { font-size: 0.75rem; color: var(--fs-success); margin-top: 6px; display: flex; align-items: center; gap: 4px; }
+  .fs-input.err { border-color: var(--fs-coral); box-shadow: 0 0 0 3px rgba(255,107,74,0.15); }
+  .fs-input.ok  { border-color: var(--fs-success); box-shadow: 0 0 0 3px rgba(79,255,176,0.15); }
+  .input-icon { position: relative; }
+  .input-icon svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--fs-text-subtle); width: 16px; height: 16px; }
+  .input-icon .fs-input { padding-left: 40px; }
+  textarea.fs-input { resize: vertical; min-height: 96px; font-family: var(--fs-font-sans); }
+  select.fs-input { appearance: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%239ca3af' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+
+  /* Checkbox */
+  .check-row { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 0.875rem; }
+  .check {
+    width: 18px; height: 18px; border: 1.5px solid var(--fs-border-2);
+    border-radius: 4px; background: var(--fs-bg-sec); flex-shrink: 0;
+    display: grid; place-items: center;
+    transition: all 150ms;
+  }
+  .check.on {
+    background: var(--fs-grad-primary); border-color: transparent;
+    box-shadow: var(--fs-glow-magenta);
+  }
+  .check.on svg { color: #fff; }
+  .check svg { width: 12px; height: 12px; color: transparent; stroke-width: 3; }
+
+  /* Radio */
+  .radio {
+    width: 18px; height: 18px; border: 1.5px solid var(--fs-border-2);
+    border-radius: 50%; background: var(--fs-bg-sec); flex-shrink: 0;
+    display: grid; place-items: center;
+  }
+  .radio.on { border-color: var(--fs-cyan); box-shadow: 0 0 10px rgba(0,212,255,0.4); }
+  .radio.on::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--fs-cyan); }
+
+  /* Toggle */
+  .toggle {
+    width: 40px; height: 22px; border-radius: 9999px;
+    background: var(--fs-bg-sec); border: 1.5px solid var(--fs-border-2);
+    position: relative; transition: all 200ms;
+  }
+  .toggle::after {
+    content: ''; position: absolute; top: 2px; left: 2px;
+    width: 14px; height: 14px; border-radius: 50%; background: var(--fs-text-muted);
+    transition: all 200ms;
+  }
+  .toggle.on {
+    background: var(--fs-grad-primary); border-color: transparent;
+    box-shadow: var(--fs-glow-magenta);
+  }
+  .toggle.on::after { left: 21px; background: #fff; }
+
+  /* Segmented */
+  .segmented {
+    display: inline-flex; background: var(--fs-bg-sec);
+    border: 1px solid var(--fs-border); border-radius: 8px; padding: 3px;
+  }
+  .segmented button {
+    border: 0; background: transparent; color: var(--fs-text-muted);
+    font-family: var(--fs-font-sans); font-weight: 500; font-size: 0.8125rem;
+    padding: 7px 16px; border-radius: 6px; cursor: pointer;
+    transition: all 150ms;
+  }
+  .segmented button.active {
+    background: var(--fs-surface-2); color: var(--fs-text);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+
+  /* Full-form example */
+  .form-example {
+    background: var(--fs-surface); border: 1px solid var(--fs-border);
+    border-radius: 12px; padding: 40px;
+    display: flex; flex-direction: column; gap: 20px;
+    max-width: 520px;
+  }
+</style>
+</head>
+<body class="fs-bg-mesh">
+<div class="page">
+
+  <header>
+    <p class="fs-eyebrow">// 06 &nbsp;Forms</p>
+    <h1 class="title">Inputs That <span class="fs-text-gradient">Respect Your Time</span></h1>
+    <p class="sub">Dark-native fields with cyan focus. Every input has a clear rest, focus, error, and success state. No floating labels — they're cute; they're also slow.</p>
+  </header>
+
+  <!-- INPUTS -->
+  <section>
+    <div>
+      <h2 class="section-label">Text inputs</h2>
+      <h3 class="section-title">Rest · Focus · Error · Success</h3>
+    </div>
+    <div class="panel">
+      <div class="grid-2">
+        <div>
+          <label class="field-label">Work email</label>
+          <input class="fs-input" placeholder="you@company.com">
+          <div class="field-hint">We'll never share this. Unsubscribe any time.</div>
+        </div>
+        <div>
+          <label class="field-label">Work email · focused</label>
+          <input class="fs-input" value="maya@northblock.co" style="border-color: var(--fs-cyan); box-shadow: 0 0 0 3px rgba(0,212,255,0.15);">
+          <div class="field-hint">Focus ring uses cyan + 3px soft halo.</div>
+        </div>
+        <div>
+          <label class="field-label">Work email · error</label>
+          <input class="fs-input err" value="maya@northblock">
+          <div class="field-error">⚠ Enter a valid email address</div>
+        </div>
+        <div>
+          <label class="field-label">Work email · verified</label>
+          <input class="fs-input ok" value="maya@northblock.co">
+          <div class="field-ok">✓ Verified</div>
+        </div>
+      </div>
+
+      <div style="height: 1px; background: var(--fs-border);"></div>
+
+      <div class="grid-2">
+        <div>
+          <label class="field-label">With leading icon</label>
+          <div class="input-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
+            <input class="fs-input" placeholder="Search integrations…">
+          </div>
+        </div>
+        <div>
+          <label class="field-label">Disabled</label>
+          <input class="fs-input" placeholder="Not editable" disabled style="opacity: 0.5; cursor: not-allowed;">
+          <div class="field-hint">Disabled state drops opacity to 50%.</div>
+        </div>
+        <div>
+          <label class="field-label">Textarea</label>
+          <textarea class="fs-input" placeholder="Tell us what you're building…"></textarea>
+        </div>
+        <div>
+          <label class="field-label">Select</label>
+          <select class="fs-input">
+            <option>Lovable</option>
+            <option>Webflow</option>
+            <option>v0</option>
+            <option>Cursor</option>
+            <option>Framer</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHECK + RADIO + TOGGLE -->
+  <section>
+    <div>
+      <h2 class="section-label">Choices</h2>
+      <h3 class="section-title">Checkbox, radio, toggle, segmented</h3>
+      <p class="section-desc">On-states borrow the brand gradient for checkbox/toggle (committing action) and cyan ring for radio (selecting one of many).</p>
+    </div>
+    <div class="panel">
+      <div class="grid-2">
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div class="check-row">
+            <div class="check on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></div>
+            <div>
+              <div style="font-weight: 500;">Enable webhook notifications</div>
+              <div class="fs-small">Get notified when content is published.</div>
+            </div>
+          </div>
+          <div class="check-row">
+            <div class="check"></div>
+            <div style="font-weight: 500;">Send weekly digest</div>
+          </div>
+          <div class="check-row">
+            <div class="check on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></div>
+            <div style="font-weight: 500;">I agree to the terms</div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div class="check-row"><div class="radio on"></div><div style="font-weight: 500;">Monthly billing</div></div>
+          <div class="check-row"><div class="radio"></div><div><div style="font-weight: 500;">Annual billing</div><div class="fs-small">Save 20% · $23/mo</div></div></div>
+          <div class="check-row"><div class="radio"></div><div style="font-weight: 500;">Pay as you go</div></div>
+        </div>
+      </div>
+
+      <div style="height: 1px; background: var(--fs-border);"></div>
+
+      <div class="grid-2">
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div class="fs-row" style="justify-content: space-between;">
+            <div>
+              <div style="font-weight: 500;">Auto-publish drafts</div>
+              <div class="fs-small">Webhook triggers publish on save.</div>
+            </div>
+            <div class="toggle on"></div>
+          </div>
+          <div class="fs-row" style="justify-content: space-between;">
+            <div>
+              <div style="font-weight: 500;">Require content review</div>
+              <div class="fs-small">Two-person approval before publish.</div>
+            </div>
+            <div class="toggle"></div>
+          </div>
+        </div>
+
+        <div>
+          <label class="field-label">Environment</label>
+          <div class="segmented">
+            <button>Development</button>
+            <button class="active">Staging</button>
+            <button>Production</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPLETE FORM -->
+  <section>
+    <div>
+      <h2 class="section-label">Complete form</h2>
+      <h3 class="section-title">Contact sales</h3>
+      <p class="section-desc">Real composition: label → input → hint. Primary button right-aligned, secondary (if needed) to its left. Never centered.</p>
+    </div>
+    <div class="form-example">
+      <div>
+        <p class="fs-eyebrow" style="margin: 0 0 8px;">// Get in touch</p>
+        <h3 class="fs-h3" style="margin: 0;">Talk to Sales</h3>
+      </div>
+      <div>
+        <label class="field-label">Full name</label>
+        <input class="fs-input" placeholder="Maya Kleinfeld">
+      </div>
+      <div>
+        <label class="field-label">Work email</label>
+        <input class="fs-input" placeholder="you@company.com">
+      </div>
+      <div>
+        <label class="field-label">Team size</label>
+        <select class="fs-input">
+          <option>Just me</option>
+          <option>2–5</option>
+          <option>6–20</option>
+          <option>20+</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label">What are you building?</label>
+        <textarea class="fs-input" placeholder="A quick sentence or two…"></textarea>
+      </div>
+      <div class="check-row">
+        <div class="check on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></div>
+        <div>I agree to the <span style="color: var(--fs-cyan); text-decoration: underline;">privacy policy</span>.</div>
+      </div>
+      <div class="fs-row" style="justify-content: flex-end; margin-top: 8px;">
+        <a class="fs-btn fs-btn-ghost">Cancel</a>
+        <a class="fs-btn fs-btn-primary">Schedule a Demo →</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
